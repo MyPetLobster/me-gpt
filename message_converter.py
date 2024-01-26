@@ -4,9 +4,8 @@ import json
 def main():
     text_file_path = "training/raw_messages/raw_test_100ln.txt"
     json_file = convert_text_to_json(text_file_path)
-    print(json_file)
-
-
+    file_name = text_file_path.split("/")[-1].split(".")[0]
+    write_json_to_file(json_file, file_name)
 
 def convert_text_format(text):
 
@@ -73,6 +72,11 @@ def convert_text_to_json(text_file):
 
     return json.dumps(json_format, indent=2)
 
+
+# Write the JSON format to a file in directory called "training/json_messages"
+def write_json_to_file(json_file, file_name):
+    with open("training/json_messages/" + file_name + ".json", 'w') as file:
+        file.write(json_file)
 
 if __name__ == "__main__":
     main()
