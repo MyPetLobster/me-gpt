@@ -23,10 +23,10 @@ def convert_text_format(text):
     # Replace phone numbers with "user"
     text_cleaned = re.sub(r'\+\d+', 'user', text_cleaned)
 
-    # Separate conversations with three asterisks
-    text_formatted = re.sub(r'(?<=\n)\n+', '\n\n', text_cleaned)
+    # Replace every double new line with three asterisks to separate messages
+    text_cleaned = re.sub(r'\n\n', '***', text_cleaned)
 
-    return text_formatted.strip()
+    return text_cleaned.strip()
 
 
 def convert_text_to_json(text_file):
@@ -36,14 +36,18 @@ def convert_text_to_json(text_file):
 
     # Remove timestamps and read by line and replace "Me" and phone numbers
     text_cleaned = convert_text_format(text)
-
+    
+    print("\n\n\n")
     print(text_cleaned)
     print("\n\n\n")
-    
-    # Split cleaned text into messages
-    messages = re.split(r'\n\n', text_cleaned.strip())
 
+    # Split cleaned text into messages by "***"
+    messages = text_cleaned.split("***")
+   
+
+    print("\n\n\n")
     print(messages)
+    print("\n\n\n")
 
     # Define roles
     assistant_role = "assistant"
@@ -55,13 +59,13 @@ def convert_text_to_json(text_file):
     # Determine the role for each message
     current_role = user_role
     for message in messages:
-        if message.startswith("assistant"):
+        if message.startswith("assistant") or message.startswith(" \nassistant"):
             current_role = assistant_role
-        elif message.startswith("user"):
+        elif message.startswith("user") or message.startswith(" \nuser"):
             current_role = user_role
 
         # Extract the message content, looking for "Me" or "+1234567890"
-        content = re.sub(r'Me|(\+\d+)', '', message).strip()
+        content = re.sub(r'assistant|user', '', message).strip()
 
         # Add the message to the JSON format, skip if empty
         if content:
