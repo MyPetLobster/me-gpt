@@ -8,9 +8,8 @@ def main():
     write_json_to_file(json_file, file_name)
 
 def convert_text_format(text):
-
-    date_time_pattern = re.compile(r'\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s\d{1,2},\s\d{4}\s+\d{1,2}:\d{2}:\d{2}\s+[APMapm]{2}\b')
     # Replace date and time with an empty string
+    date_time_pattern = re.compile(r'\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s\d{1,2},\s\d{4}\s+\d{1,2}:\d{2}:\d{2}\s+[APMapm]{2}\b')
     text_cleaned = re.sub(date_time_pattern, '', text)
 
     # Remove (Read by...)
