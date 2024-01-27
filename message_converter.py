@@ -15,14 +15,17 @@ def convert_text_format(text):
     # Remove (Read by...)
     text_cleaned = re.sub(r'\(Read by .*?\)', '', text_cleaned)
     
+    # -*-*- Dashing Star Divider -*-*-
     # Replace "Me" with "assistant"
-    text_cleaned = re.sub(r'\bMe\b', 'assistant', text_cleaned)
-
+    text_cleaned = re.sub(r'\bMe\b', '-*-*- assistant', text_cleaned)
     # Replace phone numbers with "user"
-    text_cleaned = re.sub(r'\+\d+', 'user', text_cleaned)
+    text_cleaned = re.sub(r'\+\d+', '-*-*- user', text_cleaned)
 
-    # Replace every double new line with three asterisks to separate messages
-    text_cleaned = re.sub(r'\n\n', '***', text_cleaned)
+    # Replace double new lines with '' and single new lines with ' '
+    text_cleaned = re.sub(r'\n\n', '', text_cleaned)
+
+    # Add space after every period if there isn't one already
+    text_cleaned = re.sub(r'(?<!\s)(\.)(?!\s)', r'\1 ', text_cleaned)
 
     return text_cleaned.strip()
 
@@ -34,18 +37,9 @@ def convert_text_to_json(text_file):
 
     # Remove timestamps and read by line and replace "Me" and phone numbers
     text_cleaned = convert_text_format(text)
-    
-    print("\n\n\n")
-    print(text_cleaned)
-    print("\n\n\n")
 
-    # Split cleaned text into messages by "***"
-    messages = text_cleaned.split("***")
-   
-
-    print("\n\n\n")
-    print(messages)
-    print("\n\n\n")
+    # Split cleaned text into messages by "-*-*-"
+    messages = text_cleaned.split("-*-*- ")
 
     # Define roles
     assistant_role = "assistant"
@@ -57,10 +51,11 @@ def convert_text_to_json(text_file):
     # Determine the role for each message
     current_role = user_role
     for message in messages:
-        if message.startswith("assistant") or message.startswith(" \nassistant"):
-            current_role = assistant_role
-        elif message.startswith("user") or message.startswith(" \nuser"):
-            current_role = user_role
+        if message:
+            if message.startswith("assistant"):
+                current_role = assistant_role
+            elif message.startswith("user"):
+                current_role = user_role
 
         # Extract the message content, looking for "Me" or "+1234567890"
         content = re.sub(r'assistant|user', '', message).strip()
