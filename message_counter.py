@@ -1,5 +1,8 @@
 import re
 
+## Accepts a text file in the format of iMessage database files
+## I extracted iMessage data using imessage-exporter 
+
 def main():
     file_name = input("Enter the name of the file: ")
     with open(file_name, "r") as text_file:
