@@ -2,7 +2,7 @@ import re
 import json
 
 def main():
-    text_file_path = "training/raw_messages/raw_test_100ln.txt"
+    text_file_path = input("Enter the path to the text file: ")
     json_file = convert_text_to_json(text_file_path)
     file_name = text_file_path.split("/")[-1].split(".")[0]
     write_json_to_file(json_file, file_name)
