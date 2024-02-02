@@ -5,7 +5,7 @@ import re
 def main():
     encoding = tiktoken.encoding_for_model("gpt-3.5-turbo")
     
-    with open("training/raw_messages/test_file_1k.txt", 'r') as file:
+    with open("training/ready_text/nick_curated_01.txt", 'r') as file:
         text = file.read()
     
     text_cleaned = convert_text_format(text)
