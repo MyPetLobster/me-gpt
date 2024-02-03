@@ -5,9 +5,9 @@ import os
 def main():
     text_file_path = input("Enter the path to the text file: ")
     json_file = convert_text_to_json(text_file_path)
-    # Assuming the text file is at least one directory deep
     file_name = os.path.basename(text_file_path).split(".")[0]
     write_json_to_file(json_file, file_name)
+    copy_json_to_text(json.loads(json_file), file_name)
 
 
 # Process the message file. Remove timestamps, read-receipts, and set roles
@@ -72,6 +72,11 @@ def write_json_to_file(json_file, file_name):
     with open("training/json_messages/" + file_name + ".json", 'w') as file:
         file.write(json_file)
 
+# Copy the contents of the JSON file into a new text file (.txt)
+def copy_json_to_text(json_file, file_name):
+    with open("training/ready_text/" + file_name + "_user_only.txt", 'w') as file:
+        for message in json_file:
+            file.write(f'{message["role"]}: {message["content"]}\n')
 
 if __name__ == "__main__":
     main()
