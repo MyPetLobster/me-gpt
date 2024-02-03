@@ -1,5 +1,5 @@
 import tiktoken
-import re
+from message_converter import convert_text_to_json
 from rich import print as rich_print
 from rich.console import Console
 from rich import box
@@ -42,7 +42,7 @@ def main():
         text = file.read()
     
     if iMessage_format:
-        text = convert_text_format(text)
+        text = convert_text_to_json(text)
     
     token_count = len(encoding.encode(text))
     
@@ -50,30 +50,8 @@ def main():
     rich_print("\n")
 
 
-def convert_text_format(text):
-    '''
-    Function to handle the formatting for exported iMessage chat history
-    '''
-    # Replace date and time with an empty string
-    date_time_pattern = re.compile(r'\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s\d{1,2},\s\d{4}\s+\d{1,2}:\d{2}:\d{2}\s+[APMapm]{2}\b')
-    text_cleaned = re.sub(date_time_pattern, '', text)
-
-    # Remove (Read by...)
-    text_cleaned = re.sub(r'\(Read by .*?\)', '', text_cleaned)
-    
-    # Set roles, and use -*-*- to split messages
-    text_cleaned = re.sub(r'\bMe\b', '', text_cleaned)
-    text_cleaned = re.sub(r'\+\d+', '', text_cleaned)
-
-    # Replace new lines with ''
-    text_cleaned = re.sub(r'\n\n', '', text_cleaned)
-    text_cleaned = re.sub(r'\n', ' ', text_cleaned)
-
-    # Add space after every period if there isn't one already
-    text_cleaned = re.sub(r'(?<!\s)(\.)(?!\s)', r'\1 ', text_cleaned)
-
-    return text_cleaned.strip()
-
-
 if __name__ == "__main__":
     main()
+
+
+

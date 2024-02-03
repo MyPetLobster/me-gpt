@@ -27,7 +27,10 @@ def main():
     text_file_path = console.input("[bold light_slate_grey]Enter the path to the text file: [/]")
     rich_print("\n")
 
-    json_file = convert_text_to_json(text_file_path)
+    with open(text_file_path, 'r') as file:
+        text = file.read()
+
+    json_file = convert_text_to_json(text)
     file_name = os.path.basename(text_file_path).split(".")[0]
     write_json_to_file(json_file, file_name)
     copy_json_to_text(json.loads(json_file), file_name)
@@ -55,10 +58,7 @@ def convert_text_format(text):
     return text_cleaned.strip()
 
 
-def convert_text_to_json(text_file):
-    with open(text_file, 'r') as file:
-        text = file.read()
-
+def convert_text_to_json(text):
     # Remove timestamps and read-receipts. Set roles
     text_cleaned = convert_text_format(text)
 
