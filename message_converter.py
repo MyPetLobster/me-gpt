@@ -97,7 +97,7 @@ def write_json_to_file(json_file, file_name):
 
 # Copy the contents of the JSON file into a new text file (.txt)
 def copy_json_to_text(json_file, file_name):
-    with open("training/json_messages/" + file_name +  "_json.txt", 'w') as file:
+    with open("training/ready_text/" + file_name +  "_json.txt", 'w') as file:
         file.write('[\n')
         for message in json_file:
             file.write(f'''  {{\n    "role": {message["role"]}\n    "content":{message["content"]} \n  }},\n''')
