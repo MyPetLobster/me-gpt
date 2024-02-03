@@ -1,9 +1,32 @@
 import re
 import json
 import os
+from rich import print as rich_print
+from rich.console import Console
+from rich import box
+from rich.table import Table
+
+console = Console()
 
 def main():
-    text_file_path = input("Enter the path to the text file: ")
+    intro_table = Table(box=box.SQUARE_DOUBLE_HEAD, min_width=100)
+    intro_table.add_column("Welcome to iMessage Converter", header_style="bold cyan", justify="center")
+    intro_table.add_row('''[italic]This program will convert an exported iMessage chat into\nChatGPT prompt format. By default the program will assign the\n'assistant' role to your messages (aka "Me") and the person you\nare talking to will be assigned the 'user' role.[/]''')
+    intro_table.add_row(' ')
+    intro_table.add_row('[italic]The program will also remove all dates, time stamps, and read receipts.\n[/]')
+    intro_table.add_row(' ')
+    intro_table.add_row('[italic]The program will then write the JSON format to a file in the directory\n"training/json_messages" and copy the contents of the JSON file into a text file with the same name\n[/]')
+    intro_table.add_row('[bold deep_pink4]iMessage Converter - By Cory Suzuki[/]')
+    intro_table.add_row(' ')
+    intro_table.add_row('[bold chartreuse3] https://github.com/MyPetLobster/me-gpt[/]')
+
+    rich_print("\n")
+    rich_print(intro_table)
+    rich_print("\n")
+
+    text_file_path = console.input("[bold light_slate_grey]Enter the path to the text file: [/]")
+    rich_print("\n")
+
     json_file = convert_text_to_json(text_file_path)
     file_name = os.path.basename(text_file_path).split(".")[0]
     write_json_to_file(json_file, file_name)
@@ -74,9 +97,11 @@ def write_json_to_file(json_file, file_name):
 
 # Copy the contents of the JSON file into a new text file (.txt)
 def copy_json_to_text(json_file, file_name):
-    with open("training/ready_text/" + file_name + "_user_only.txt", 'w') as file:
+    with open("training/json_messages/" + file_name +  "_json.txt", 'w') as file:
+        file.write('[\n')
         for message in json_file:
-            file.write(f'{message["role"]}: {message["content"]}\n')
+            file.write(f'''  {{\n    "role": {message["role"]}\n    "content":{message["content"]} \n  }},\n''')
+        file.write(']')
 
 if __name__ == "__main__":
     main()
